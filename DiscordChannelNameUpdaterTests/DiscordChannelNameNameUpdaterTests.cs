@@ -33,19 +33,19 @@ public static class DiscordChannelNameNameUpdaterTests
                     cancellationTokenSource.Token))
             .ReturnsAsync(() => getUserVoiceStateCount++ < 3 ? null : channelId);
 
-        var channelNameIfFalse = Guid.NewGuid().ToString();
+        var channelNameIfConnected = Guid.NewGuid().ToString();
 
-        var channelNameIfTrue = Guid.NewGuid().ToString();
+        var channelNameIfDisconnected = Guid.NewGuid().ToString();
 
-        var modifyChannelNameAsyncParamsChannelNameIfTrue = new Discord.Params.ModifyChannelNameAsyncParams
+        var modifyChannelNameAsyncParamsChannelNameIfDisconnected = new Discord.Params.ModifyChannelNameAsyncParams
         {
             ChannelId = channelId,
-            Name = channelNameIfTrue
+            Name = channelNameIfDisconnected
         };
 
         mockDiscord
             .Setup(discord =>
-                discord.ModifyChannelNameAsync(modifyChannelNameAsyncParamsChannelNameIfTrue,
+                discord.ModifyChannelNameAsync(modifyChannelNameAsyncParamsChannelNameIfDisconnected,
                     cancellationTokenSource.Token))
             .ThrowsAsync(new TaskCanceledException());
 
@@ -54,8 +54,8 @@ public static class DiscordChannelNameNameUpdaterTests
         mockConfig.SetupGet(config => config.GuildId).Returns(guildId);
         mockConfig.SetupGet(config => config.UserId).Returns(userId);
         mockConfig.SetupGet(config => config.ChannelId).Returns(channelId);
-        mockConfig.SetupGet(config => config.ChannelNameIfFalse).Returns(channelNameIfFalse);
-        mockConfig.SetupGet(config => config.ChannelNameIfTrue).Returns(channelNameIfTrue);
+        mockConfig.SetupGet(config => config.ChannelNameIfDisconnected).Returns(channelNameIfConnected);
+        mockConfig.SetupGet(config => config.ChannelNameIfConnected).Returns(channelNameIfDisconnected);
 
         var mockDelayHandler = new Mock<HttpRequestMessageHandler.Interfaces.IDelayHandler>();
 
@@ -73,18 +73,18 @@ public static class DiscordChannelNameNameUpdaterTests
                 cancellationTokenSource.Token), Times.Exactly(4));
 
         mockDiscord.Verify(
-            discord => discord.ModifyChannelNameAsync(modifyChannelNameAsyncParamsChannelNameIfTrue,
+            discord => discord.ModifyChannelNameAsync(modifyChannelNameAsyncParamsChannelNameIfDisconnected,
                 cancellationTokenSource.Token),
             Times.Exactly(1));
 
-        var modifyChannelNameAsyncParamsChannelNameIfFalse = new Discord.Params.ModifyChannelNameAsyncParams
+        var modifyChannelNameAsyncParamsChannelNameIfConnected = new Discord.Params.ModifyChannelNameAsyncParams
         {
             ChannelId = channelId,
-            Name = channelNameIfFalse
+            Name = channelNameIfConnected
         };
 
         mockDiscord.Verify(
-            discord => discord.ModifyChannelNameAsync(modifyChannelNameAsyncParamsChannelNameIfFalse,
+            discord => discord.ModifyChannelNameAsync(modifyChannelNameAsyncParamsChannelNameIfConnected,
                 cancellationTokenSource.Token), Times.Exactly(1));
 
         mockDiscord.VerifyNoOtherCalls();

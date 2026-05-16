@@ -45,7 +45,7 @@ public sealed class DiscordChannelNameNameUpdater(IDiscord discord, IConfig conf
 
         _isUserInChannel = isUserInChannel;
 
-        var name = isUserInChannel ? config.ChannelNameIfTrue : config.ChannelNameIfFalse;
+        var name = isUserInChannel ? config.ChannelNameIfConnected : config.ChannelNameIfDisconnected;
 
         var modifyChannelNameAsyncParams = new ModifyChannelNameAsyncParams
         {

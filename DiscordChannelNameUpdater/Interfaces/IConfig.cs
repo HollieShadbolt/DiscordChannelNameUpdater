@@ -24,14 +24,14 @@ public interface IConfig
     string ChannelId { get; }
 
     /// <summary>
-    /// Get the channel names to update to when the user is not in the channel.
+    /// Get the channel names to update to if the user is disconnected from the channel.
     /// </summary>
-    /// <returns>The channel names to update to when the user is not in the channel.</returns>
-    string ChannelNameIfFalse { get; }
+    /// <returns>The channel names to update to if the user is disconnected from the channel.</returns>
+    string ChannelNameIfConnected { get; }
 
     /// <summary>
-    /// Get the channel names to update to when the user is in the channel.
+    /// Get the channel names to update to if the user is connected to the channel.
     /// </summary>
-    /// <returns>The channel names to update to when the user is in the channel.</returns>
-    string ChannelNameIfTrue { get; }
+    /// <returns>The channel names to update to if the user is connected to the channel.</returns>
+    string ChannelNameIfDisconnected { get; }
 }
